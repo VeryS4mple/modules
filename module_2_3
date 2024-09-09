@@ -1,0 +1,10 @@
+list_ = [42, 69, 322, 13, 0, 99, -5, 9, 8, 7, -6, 5]
+a = -1
+while a < len(list_):
+    a += 1
+    if (list_[a]) < 0:
+        break
+    elif list_[a] > 0:
+        print(list_[a])
+    else:
+        continue
