@@ -1,0 +1,24 @@
+import random
+def first_number():
+    stone1 = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+    number = stone1
+    chip = random.choice(number)
+    return chip
+one = first_number()
+print('Number in first stone:', one)
+pairnum1 = list(range(1, one))
+pairnum2 = list(range(1, one))
+pairs = []
+result = ''
+for i in pairnum1:
+    for j in pairnum2:
+        if i >= j:
+            continue
+        else:
+            aliquot = one % (i + j)
+            if aliquot == 0:
+                pairs.append([i, j])
+                result = result + str(i) + str(j)
+print('Pairs of numbers', *pairs)
+print('Input password', result, 'into second stone')
+print('The way is open!')
