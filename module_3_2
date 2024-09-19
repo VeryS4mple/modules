@@ -1,5 +1,5 @@
 def send_email(message, recipient, *, sender='university.help@gmail.com'):
-    if "@" not in recipient or (".com" not in recipient and ".ru" not in recipient and ".net" not in recipient):
+    if "@" not in (recipient and sender) or (".com" not in (recipient and sender) and ".ru" not in (recipient and sender) and ".net" not in (recipient and sender)):
         print(f'Невозможно отправить письмо с адреса {sender} на адрес {recipient}')
     elif sender == recipient:
         print("Нельзя отправить письмо самому себе!")
