@@ -1,0 +1,61 @@
+class Vehicle:
+    # Атрибут класса - допустимые цвета
+    __COLOR_VARIANTS = ["black", "white", "red", "blue", "green"]
+
+    def __init__(self, owner: str, model: str, engine_power: int, color: str):
+        self.owner = owner  # Владелец может меняться
+        self.__model = model  # Модель транспортного средства
+        self.__engine_power = engine_power  # Мощность двигателя
+        self.__color = color  # Цвет транспортного средства
+
+    # Метод для получения модели
+    def get_model(self):
+        return f"Модель: {self.__model}"
+
+    # Метод для получения мощности двигателя
+    def get_horsepower(self):
+        return f"Мощность двигателя: {self.__engine_power}"
+
+    # Метод для получения цвета
+    def get_color(self):
+        return f"Цвет: {self.__color}"
+
+    # Метод для смены цвета
+    def set_color(self, new_color: str):
+        if new_color.lower() in Vehicle.__COLOR_VARIANTS:
+            self.__color = new_color.lower()
+        else:
+            print(f"Нельзя сменить цвет на {new_color}")
+
+    # Метод для распечатки полной информации
+    def print_info(self):
+        print(self.get_model())
+        print(self.get_horsepower())
+        print(self.get_color())
+        print(f"Владелец: {self.owner}")
+
+
+# Класс Sedan, который наследует Vehicle
+class Sedan(Vehicle):
+    __PASSENGERS_LIMIT = 5  # Лимит пассажиров для седана
+
+    # Можно добавить метод для получения лимита пассажиров
+    def get_passengers_limit(self):
+        return f"Лимит пассажиров: {Sedan.__PASSENGERS_LIMIT}"
+
+
+# Текущие цвета __COLOR_VARIANTS = ['blue', 'red', 'green', 'black', 'white']
+vehicle1 = Sedan('Fedos', 'Toyota Mark II', 500, 'blue')
+
+# Изначальные свойства
+vehicle1.print_info()
+
+# Меняем свойства (в т.ч. вызывая методы)
+vehicle1.set_color('Pink')
+vehicle1.set_color('BLACK')
+vehicle1.owner = 'Vasyok'
+
+# Проверяем что поменялось
+vehicle1.print_info()
+# Проверим лимит пассажиров
+print(vehicle1.get_passengers_limit())
