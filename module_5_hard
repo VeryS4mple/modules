@@ -80,7 +80,7 @@ class UrTube:
 
         print(f"Секунды воспроизведения: ", end="")
         while found_video.time_now < found_video.duration:
-            print(found_video.time_now, end=", ")
+            print(found_video.time_now + 1, end=" ")
             found_video.time_now += 1
             time.sleep(1)
         print("\nКонец видео")
