@@ -1,27 +1,20 @@
-import time
-import hashlib
-
 class User:
     def __init__(self, nickname, password, age):
         self.nickname = nickname
-        self.password = self.hash_password(password)
+        self.password = hash(password)
         self.age = age
-
-    def hash_password(self, password):
-        return int(hashlib.sha256(password.encode()).hexdigest(), 16)
-
     def __repr__(self):
         return f"User(nickname='{self.nickname}', age={self.age})"
-
 class Video:
-    def __init__(self, title, duration, adult_mode=False):
+    def __init__(self, title, duration, time_now=0, adult_mode=False):
         self.title = title
         self.duration = duration
-        self.time_now = 0
+        self.time_now = time_now
         self.adult_mode = adult_mode
 
-    def __repr__(self):
-        return f"Video(title='{self.title}', duration={self.duration})"
+
+import time
+
 
 class UrTube:
     def __init__(self):
@@ -29,66 +22,69 @@ class UrTube:
         self.videos = []
         self.current_user = None
 
+    # Метод для входа пользователя
     def log_in(self, nickname, password):
-        hashed_password = int(hashlib.sha256(password.encode()).hexdigest(), 16)
         for user in self.users:
-            if user.nickname == nickname and user.password == hashed_password:
+            if user.nickname == nickname and user.password == hash(password):
                 self.current_user = user
-                print(f"Вход выполнен: {user.nickname}")
-                return
-        print("Неправильный логин или пароль")
+                return f"Пользователь {nickname} успешно вошел."
+        return "Неверный логин или пароль."
 
+    # Метод для регистрации нового пользователя
     def register(self, nickname, password, age):
         for user in self.users:
             if user.nickname == nickname:
-                print(f"Пользователь {nickname} уже существует")
+                print(f"Пользователь {nickname} уже существует.")
                 return
+
         new_user = User(nickname, password, age)
         self.users.append(new_user)
-        self.current_user = new_user
-        print(f"Регистрация успешна: {new_user.nickname}")
+        self.log_in(nickname, password)
 
+    # Метод выхода из аккаунта
     def log_out(self):
-        if self.current_user:
-            print(f"Пользователь {self.current_user.nickname} вышел из системы")
-            self.current_user = None
-        else:
-            print("Нет пользователя для выхода")
+        self.current_user = None
+        print("Вы вышли из аккаунта.")
 
+    # Метод добавления новых видео
     def add(self, *videos):
         for video in videos:
-            if video.title not in [v.title for v in self.videos]:
+            if not any(video.title == existing_video.title for existing_video in self.videos):
                 self.videos.append(video)
-                print(f"Видео '{video.title}' добавлено")
             else:
-                print(f"Видео с названием '{video.title}' уже существует")
+                print(f"Видео '{video.title}' уже существует.")
 
+    # Метод поиска видео по ключевому слову
     def get_videos(self, search_word):
-        search_word_lower = search_word.lower()
-        found_videos = [video.title for video in self.videos if search_word_lower in video.title.lower()]
-        return found_videos
+        result = []
+        search_word = search_word.lower()  # Приводим к нижнему регистру для нечувствительного поиска
+        for video in self.videos:
+            if search_word in video.title.lower():
+                result.append(video.title)
+        return result
 
+    # Метод воспроизведения видео
     def watch_video(self, title):
         if not self.current_user:
             print("Войдите в аккаунт, чтобы смотреть видео")
             return
 
-        video = next((v for v in self.videos if v.title == title), None)
-        if video is None:
-            print(f"Видео '{title}' не найдено")
+        found_video = next((video for video in self.videos if video.title == title), None)
+        if not found_video:
+            print(f"Видео '{title}' не найдено.")
             return
 
-        if video.adult_mode and self.current_user.age < 18:
+        if found_video.adult_mode and self.current_user.age < 18:
             print("Вам нет 18 лет, пожалуйста покиньте страницу")
             return
 
-        print(f"Начало воспроизведения видео: {video.title}")
-        while video.time_now < video.duration:
-            print(video.time_now + 1, end=" ")
-            video.time_now += 1
+        print(f"Секунды воспроизведения: ", end="")
+        while found_video.time_now < found_video.duration:
+            print(found_video.time_now, end=", ")
+            found_video.time_now += 1
             time.sleep(1)
-        print("Конец видео")
-        video.time_now = 0  # Сброс времени просмотра
+        print("\nКонец видео")
+        found_video.time_now = 0  # Сброс времени после окончания воспроизведения
 ur = UrTube()
 v1 = Video('Лучший язык программирования 2024 года', 200)
 v2 = Video('Для чего девушкам парень программист?', 10, adult_mode=True)
