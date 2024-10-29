@@ -1,0 +1,55 @@
+class WordsFinder:
+    def __init__(self, *file_names):
+        # Принимаем неограниченное количество названий файлов и записываем их в атрибут file_names.
+        self.file_names = file_names
+
+    def get_all_words(self):
+        # Метод, который возвращает словарь с названиями файлов и списками слов в каждом файле.
+        all_words = {}
+        punctuation = [',', '.', '=', '!', '?', ';', ':', ' - ']
+
+        for file_name in self.file_names:
+            try:
+                with open(file_name, 'r', encoding='utf-8') as file:
+                    text = file.read().lower()
+                    for symbol in punctuation:
+                        text = text.replace(symbol, ' ')
+                    words = text.split()
+                    all_words[file_name] = words
+            except FileNotFoundError:
+                print(f"Файл '{file_name}' не найден.")
+                all_words[file_name] = []
+
+        return all_words
+
+    def find(self, word):
+        # Метод, возвращающий словарь с названием файла и позицией первого вхождения слова.
+        result = {}
+        all_words = self.get_all_words()
+        word = word.lower()
+
+        for name, words in all_words.items():
+            try:
+                position = words.index(word) + 1
+                result[name] = position
+            except ValueError:
+                result[name] = None
+
+        return result
+
+    def count(self, word):
+        # Метод, возвращающий словарь с названием файла и количеством вхождений слова.
+        result = {}
+        all_words = self.get_all_words()
+        word = word.lower()
+
+        for name, words in all_words.items():
+            result[name] = words.count(word)
+
+        return result
+
+
+finder2 = WordsFinder('test_file.txt')
+print(finder2.get_all_words()) # Все слова
+print(finder2.find('TEXT')) # 3 слово по счёту
+print(finder2.count('teXT')) # 4 слова teXT в тексте всего
