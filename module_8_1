@@ -1,0 +1,21 @@
+def add_everything_up(a, b):
+    try:
+        # Проверка на совпадение типов
+        if type(a) == type(b):
+            # Если оба аргумента — числа, складываем их
+            if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+                return a + b
+            # Если оба аргумента — строки, соединяем их
+            elif isinstance(a, str) and isinstance(b, str):
+                return a + b
+        # Если типы различаются, возвращаем строковое представление их вместе
+        else:
+            return str(a) + str(b)
+    except TypeError as e:
+        # Обработка исключения (на случай, если TypeError не был перехвачен условием)
+        return str(a) + str(b)
+
+# Примеры использования:
+print(add_everything_up(123.456, 'строка'))  # Вывод: 123.456строка
+print(add_everything_up('яблоко', 4215))      # Вывод: яблоко4215
+print(add_everything_up(123.456, 7))          # Вывод: 130.456
