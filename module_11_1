@@ -1,0 +1,28 @@
+import requests
+
+url = 'https://api.github.com/repos/python/cpython'
+response = requests.get(url)
+
+if response.status_code == 200:
+    print(response.json()['description'])
+else:
+    print(f"Ошибка: статус-код {response.status_code}")
+
+import numpy as np
+
+array = np.array([1, 2, 3, 4])
+result = array * 2
+
+print(result)
+
+import matplotlib.pyplot as plt
+
+x = np.linspace(-10, 10, 100)
+y = x**2
+
+plt.plot(x, y)
+plt.title('График функции $y=x^2$')
+plt.xlabel('$x$')
+plt.ylabel('$y$')
+plt.grid(True)
+plt.show()
