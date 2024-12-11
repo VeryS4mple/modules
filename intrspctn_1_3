@@ -1,0 +1,46 @@
+def introspection_info(obj):
+    """
+    Функция для проведения интроспекции объекта.
+
+    :param obj: Любой объект
+    :return: Словарь с информацией об объекте
+    """
+    result = {
+        'type': type(obj).__name__,  # Имя типа объекта
+        'module': obj.__class__.__module__,  # Модуль, к которому принадлежит объект
+        'attributes': [],  # Атрибуты объекта
+        'methods': []  # Методы объекта
+    }
+
+    # Получение всех атрибутов и методов объекта
+    for attribute in dir(obj):
+        if callable(getattr(obj, attribute)):
+            result['methods'].append(attribute)  # Если это метод, добавляем в список методов
+        else:
+            result['attributes'].append(attribute)  # Если это атрибут, добавляем в список атрибутов
+
+    return result
+
+# Пример пользовательского класса
+class MyClass:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def greet(self):
+        return f"Hello, my name is {self.name}."
+
+# Создаём объект класса
+my_object = MyClass("Alice", 30)
+
+# Пример использования функции
+info = introspection_info(my_object)
+print(info)
+
+# Пример с примитивным типом
+number_info = introspection_info(42)
+print(number_info)
+
+# Пример с встроенным типом
+list_info = introspection_info([1, 2, 3])
+print(list_info)
