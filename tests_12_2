@@ -1,0 +1,109 @@
+import unittest
+
+# Класс Runner
+class Runner:
+    def __init__(self, name, speed=5):
+        self.name = name
+        self.distance = 0
+        self.speed = speed
+
+    def run(self):
+        self.distance += self.speed * 2
+
+    def walk(self):
+        self.distance += self.speed
+
+    def __str__(self):
+        return self.name
+
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.name == other
+        elif isinstance(other, Runner):
+            return self.name == other.name
+
+
+# Исправленный класс Tournament
+class Tournament:
+    def __init__(self, distance, *participants):
+        self.full_distance = distance
+        self.participants = list(participants)
+
+    def start(self):
+        finishers = {}
+        place = 1
+
+        # Пока есть участники, которые не добежали до финиша
+        while self.participants:
+            # Вычисляем, сколько времени потребуется каждому участнику, чтобы добежать до финиша
+            remaining_distances = {
+                participant.name: (self.full_distance - participant.distance) / participant.speed
+                for participant in self.participants
+            }
+
+            # Определяем участника, который добежит до финиша первым
+            next_finisher_name = min(remaining_distances, key=remaining_distances.get)
+
+            # Находим объект участника с этим именем
+            next_finisher = next(participant for participant in self.participants if participant.name == next_finisher_name)
+
+            # "Доводим" этого участника до финиша
+            next_finisher.distance = self.full_distance
+            finishers[place] = next_finisher
+            place += 1
+
+            # Убираем его из участников
+            self.participants.remove(next_finisher)
+
+        return finishers
+
+
+# Класс тестирования
+class TournamentTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.all_results = {}  # Словарь для хранения всех результатов
+
+    def setUp(self):
+        # Создаём объекты бегунов
+        self.runner_usain = Runner("Усэйн", speed=10)
+        self.runner_andrei = Runner("Андрей", speed=9)
+        self.runner_nick = Runner("Ник", speed=3)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Вывод всех результатов после завершения всех тестов
+        for result in cls.all_results.values():
+            print(result)
+
+    def test_usain_and_nick(self):
+        # Забег Усэйн и Ник
+        tournament = Tournament(90, self.runner_usain, self.runner_nick)
+        results = tournament.start()
+        TournamentTest.all_results["test_usain_and_nick"] = {place: str(runner) for place, runner in results.items()}
+        # Проверяем, что Ник последний
+        last_place = max(results)
+        self.assertTrue(results[last_place] == "Ник")
+
+    def test_andrei_and_nick(self):
+        # Забег Андрей и Ник
+        tournament = Tournament(90, self.runner_andrei, self.runner_nick)
+        results = tournament.start()
+        TournamentTest.all_results["test_andrei_and_nick"] = {place: str(runner) for place, runner in results.items()}
+        # Проверяем, что Ник последний
+        last_place = max(results)
+        self.assertTrue(results[last_place] == "Ник")
+
+    def test_usain_andrei_and_nick(self):
+        # Забег Усэйн, Андрей и Ник
+        tournament = Tournament(90, self.runner_usain, self.runner_andrei, self.runner_nick)
+        results = tournament.start()
+        TournamentTest.all_results["test_usain_andrei_and_nick"] = {place: str(runner) for place, runner in results.items()}
+        # Проверяем, что Ник последний
+        last_place = max(results)
+        self.assertTrue(results[last_place] == "Ник")
+
+
+# Запуск тестов
+if __name__ == "__main__":
+    unittest.main()
