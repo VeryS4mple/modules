@@ -1,0 +1,42 @@
+import unittest
+
+# Декоратор для пропуска тестов
+def skip_if_frozen(test_func):
+    def wrapper(self, *args, **kwargs):
+        if self.is_frozen:
+            self.skipTest("Тесты в этом кейсе заморожены")
+        else:
+            return test_func(self, *args, **kwargs)
+    return wrapper
+
+# RunnerTest: тесты выполняются
+class RunnerTest(unittest.TestCase):
+    is_frozen = False  # Тесты выполняются
+
+    @skip_if_frozen
+    def test_challenge(self):
+        self.assertEqual(1 + 1, 2)
+
+    @skip_if_frozen
+    def test_run(self):
+        self.assertTrue(5 > 1)
+
+    @skip_if_frozen
+    def test_walk(self):
+        self.assertIn(3, [1, 2, 3])
+
+# TournamentTest: тесты заморожены
+class TournamentTest(unittest.TestCase):
+    is_frozen = True  # Тесты заморожены
+
+    @skip_if_frozen
+    def test_first_tournament(self):
+        self.assertEqual("abc".upper(), "ABC")
+
+    @skip_if_frozen
+    def test_second_tournament(self):
+        self.assertFalse(0)
+
+    @skip_if_frozen
+    def test_third_tournament(self):
+        self.assertGreater(10, 5)
