@@ -1,0 +1,33 @@
+from ran import Runner
+import unittest
+import logging
+
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,  # Уровень логирования
+    filename='runner_tests.log',  # Название файла для логов
+    filemode='w',  # Режим записи с заменой
+    encoding='utf-8',  # Кодировка
+    format='%(asctime)s %(levelname)s %(message)s'  # Формат вывода
+)
+
+class RunnerTest(unittest.TestCase):
+    def test_walk(self):
+        try:
+            # Передаём отрицательное значение скорости
+            runner = Runner(name="Вася", speed=-5)
+            logging.info('"test_walk" выполнен успешно')
+        except ValueError as e:  # Обработка исключения неверной скорости
+            logging.warning("Неверная скорость для Runner", exc_info=True)
+
+    def test_run(self):
+        try:
+            # Передаём неверный тип в name
+            runner = Runner(name=2, speed=10)
+            logging.info('"test_run" выполнен успешно')
+        except TypeError as e:  # Обработка исключения неверного типа
+            logging.warning("Неверный тип данных для объекта Runner", exc_info=True)
+
+
+if __name__ == "__main__":
+    unittest.main()
