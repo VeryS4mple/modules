@@ -1,0 +1,16 @@
+class Runner:
+    def __init__(self, name, speed):
+        # Проверка корректности типа для name
+        if not isinstance(name, str):
+            raise TypeError("Имя должно быть строкой")
+        # Проверка корректности значения для speed
+        if speed < 0:
+            raise ValueError("Скорость не может быть отрицательной")
+        self.name = name
+        self.speed = speed
+
+    def walk(self):
+        return f"{self.name} идёт со скоростью {self.speed} км/ч"
+
+    def run(self):
+        return f"{self.name} бежит со скоростью {self.speed * 2} км/ч"
