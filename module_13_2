@@ -4,16 +4,17 @@ import asyncio
 api = "1"
 bot = Bot(token = api)
 dp = Dispatcher(bot, storage = MemoryStorage())
+
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     print("Привет! Я бот помогающий твоему здоровью.")
-    await message.reply("Привет! Я бот помогающий твоему здоровью.")
 
-# Функция, которая обрабатывает любые другие сообщения
+
+
 @dp.message_handler()
 async def all_messages(message: types.Message):
     print("Введите команду /start, чтобы начать общение.")
-    await message.reply("Введите команду /start, чтобы начать общение.")
+    # Здесь бот ничего не отправляет в чат
 
 if __name__ == '__main__':
     print("Бот запущен. Ожидание сообщений...")
